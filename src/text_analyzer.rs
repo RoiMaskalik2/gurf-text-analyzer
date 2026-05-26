@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use crate::{Error, Result};
 
 /// This struct provides an API to perform the operations described in this module documentation
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct TextAnalyzer {
     /// Hashmap that will contain the the frequencies for every word against all of the texts that were provided.
     word_frequencies: HashMap<String, u32>,
