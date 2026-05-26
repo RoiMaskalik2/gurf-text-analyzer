@@ -22,7 +22,7 @@ impl TextAnalyzer {
     /// Gets a text and adds all the text's words to the frequency table.
     pub fn add_text_to_analyzer(&mut self, text: &str) -> Result<()> {
         if text.trim().is_empty() {
-            return Err(Error::InvalidText);
+            return Err(Error::InvalidText(text.to_string()));
         }
 
         text.split_whitespace()
@@ -35,13 +35,13 @@ impl TextAnalyzer {
     /// NOTE: Returns an error if the word did not appear in any of the texts.
     pub fn get_word_frequency(&self, word: &str) -> Result<u32> {
         if word.is_empty() || word.contains(char::is_whitespace) {
-            return Err(Error::InvalidWord);
+            return Err(Error::InvalidWord(word.to_string()));
         }
 
         let frequency = *self
             .word_frequencies
             .get(word)
-            .ok_or(Error::NonExistingWord)?;
+            .ok_or(Error::NonExistingWord(word.to_string()))?;
 
         Ok(frequency)
     }
@@ -121,7 +121,7 @@ mod tests {
     fn non_existing_word_fails() -> Result<()> {
         let analyzer = create_analyzer(&[TEXT])?;
         let result = analyzer.get_word_frequency("notexist");
-        assert!(matches!(result, Err(Error::NonExistingWord)));
+        assert!(matches!(result, Err(Error::NonExistingWord(_))));
 
         Ok(())
     }
@@ -129,7 +129,7 @@ mod tests {
     #[test]
     fn empty_text_fails() -> Result<()> {
         let result = create_analyzer(&[EMPTY_TEXT]);
-        assert!(matches!(result, Err(Error::InvalidText)));
+        assert!(matches!(result, Err(Error::InvalidText(_))));
 
         Ok(())
     }
@@ -147,7 +147,7 @@ mod tests {
     fn frequency_on_word_with_spaces_fails() -> Result<()> {
         let analyzer = create_analyzer(&[TEXT])?;
         let result = analyzer.get_word_frequency("Gurf son");
-        assert!(matches!(result, Err(Error::InvalidWord)));
+        assert!(matches!(result, Err(Error::InvalidWord(_))));
 
         Ok(())
     }

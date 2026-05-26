@@ -18,5 +18,6 @@ fn run_text_analyzer() -> Result<()> {
         "the word frequency is: {}",
         text_analyzer.get_word_frequency(&word_to_search)?
     );
+
     Ok(())
 }

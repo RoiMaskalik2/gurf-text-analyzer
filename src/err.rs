@@ -16,13 +16,16 @@ pub enum Error {
     // ------------text_analyzer---------------
     /// Access a word frequencies of a word that did not exist in the text analyzer
     #[error("{self:?}")]
-    NonExistingWord,
+    NonExistingWord(String),
 
     /// The provided word is invalid - meaning it is empty or has spaces.
     #[error("{self:?}")]
-    InvalidWord,
+    InvalidWord(String),
 
     /// The provided text is invalid - meaning it is empty or contains only spaces
     #[error("{self:?}")]
-    InvalidText,
+    InvalidText(String),
 }
+
+/// Type alias for the Result enum so that callers will not need to include the error enum in it.
+pub type Result<T> = core::result::Result<T, Error>;
